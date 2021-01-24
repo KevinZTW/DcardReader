@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 
-export function useScroll(callback) {
+export function useScrollToBottom(callback) {
   useEffect(() => {
     let timeoutId;
     const threshold = 300;

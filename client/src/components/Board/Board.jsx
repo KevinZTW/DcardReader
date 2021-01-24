@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef } from "react";
-import { useScroll } from "../../hooks/index.js";
+import { useScrollToBottom } from "../../hooks/index.js";
 import styles from "./Board.module.css";
 export default function Board() {
   const [posts, setPosts] = useState([]);
   const [furtherFetch, setFurtherFetch] = useState(0);
-  const handleScroll = useScroll(() => {
+  useScrollToBottom(() => {
     setFurtherFetch(furtherFetch + 1);
   });
   let lastPostId = useRef(null);
@@ -30,12 +30,12 @@ export default function Board() {
       const posts = await fetchData(src);
       return posts;
     }
-
-    getPost(lastPostId.current).then((newPosts) => {
+    function setPostandId(newPosts) {
       const lastIndex = newPosts.length - 1;
       lastPostId.current = newPosts[lastIndex].id;
       setPosts([...posts, ...newPosts]);
-    });
+    }
+    getPost(lastPostId.current).then(setPostandId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [furtherFetch]);
 
