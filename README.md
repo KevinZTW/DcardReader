@@ -4,12 +4,12 @@ A simple reader to demonstrate Dcard post list
 
 ## Usage
 
-To run the application, you could clone the repository and simply execute `npm run dev`, it would install dependencies, build react app and then run application on port 4000 .
+To run the application, you could clone the repository and simply execute `npm start`, it would install dependencies, build react app and then run application on port 4000 .
 
 ```
 	$ git clone https://github.com/KevinZTW/DcardReader
 	$ cd DcardReader
-	$ npm run dev
+	$ npm run start
 ```
 
 ## Structure
