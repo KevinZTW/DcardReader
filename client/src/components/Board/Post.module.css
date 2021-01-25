@@ -1,0 +1,15 @@
+.postWrapper {
+  padding: 1.8rem 1rem;
+  border-bottom: 0.1rem solid gray;
+}
+.postTitle {
+  font-size: 1.2rem;
+  font-weight: 900;
+  padding-bottom: 1rem;
+}
+.postExcerpt {
+  color: rgb(70, 64, 64);
+  line-height: 1.3rem;
+  height: 1.3rem;
+  overflow: hidden;
+}

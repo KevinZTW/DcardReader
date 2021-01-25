@@ -7,7 +7,7 @@ const app = express();
 const port = 4000;
 const __dirname = dirname(fileURLToPath(import.meta.url));
 app.use(cors());
-app.use(express.static(__dirname + "/app/build"));
+app.use(express.static(__dirname + "/client/build"));
 app.get("/v1/cors*", fetchCorsData);
 
 app.listen(port, () => {
