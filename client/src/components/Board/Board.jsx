@@ -1,53 +1,37 @@
-import { useEffect, useState, useRef } from "react";
-import { useScrollToBottom } from "../../hooks/index.js";
+import { useState } from "react";
+import Post from "./Post";
 import styles from "./Board.module.css";
+import { useScrollToBottom, useFetchData } from "../../hooks/index.js";
+import { dcardEndPoint } from "../../config.js";
 export default function Board() {
-  const [posts, setPosts] = useState([]);
-  const [furtherFetch, setFurtherFetch] = useState(0);
+  //fetch Data through custom hook useFetch, the hook would execute when argument changed
+  const [fetchUrl, setFetchUrl] = useState(`${dcardEndPoint}/posts`);
+
+  let [data, isLoading] = useFetchData(fetchUrl);
+
+  //Use custom hook to handle scroll event, the argument would be executed as callback
   useScrollToBottom(() => {
-    setFurtherFetch(furtherFetch + 1);
+    const lastId = data[data.length - 1].id;
+    const fetchUrl = `${dcardEndPoint}/posts?before=${lastId}`;
+    setFetchUrl(fetchUrl);
   });
-  let lastPostId = useRef(null);
-  const environment = process.env.NODE_ENV;
-  const corsAPI =
-    environment === "development"
-      ? "http://localhost:4000/v1/cors"
-      : "/v1/cors";
-
-  //handle Scroll
-
-  //fetch Data
-  async function fetchData(src) {
-    const response = await fetch(corsAPI + src);
-    const data = response.json();
-    return data;
-  }
-  useEffect(() => {
-    async function getPost(lastPostId) {
-      const src = lastPostId
-        ? `https://www.dcard.tw/v2/posts?before=${lastPostId}`
-        : `https://www.dcard.tw/v2/posts`;
-      const posts = await fetchData(src);
-      return posts;
-    }
-    function setPostandId(newPosts) {
-      const lastIndex = newPosts.length - 1;
-      lastPostId.current = newPosts[lastIndex].id;
-      setPosts([...posts, ...newPosts]);
-    }
-    getPost(lastPostId.current).then(setPostandId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [furtherFetch]);
 
   function renderPosts(posts) {
     const postList = posts.map((post) => (
-      <div className={styles.postWrapper} key={post.id}>
-        <div className={styles.postTitle}>{post.title}</div>
-        <div className={styles.postExcerpt}>{post.excerpt}</div>
-      </div>
+      <Post
+        key={post.id}
+        id={post.id}
+        title={post.title}
+        excerpt={post.excerpt}
+      />
     ));
     return postList;
   }
-  const postList = renderPosts(posts);
-  return <div className={styles.board}>{postList}</div>;
+  const postList = renderPosts(data);
+  return (
+    <div className={styles.board}>
+      {postList}
+      {isLoading || <div>Loading Data........</div>}
+    </div>
+  );
 }
